@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to CGSCIMB</h1>
+    <p>Boost your knowledge about stock market anytime, anywhere with CGSCIMB.</p>
+</div>
+<div class="container content ">
+</div>
+
+@section Scripts {
+    <script>
+        function UpdateView(id, url) {
+            console.log(url);
+            $.ajax({
+                url: "/api/File/UpdateView/" + id,
+                type: "put",
+                success: function (result, status, xhr) {
+
+                    window.location.href = 'Uploads/' + url;
+
+
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
+        $(document).ready(function () {
+
+            var options = {};
+            options.url = "/api/File/GetData";
+            options.type = "GET";
+            options.dataType = "json";
+            options.success = function (data) {
+                debugger;
+
+
+
+                data.forEach(function (e) {
+                    //$("#ArticleTbl tbody").append("<tr><td>" + e.articleTitle + "</td><td>" + e.description + "</td><td>" + row.uid + "</td><td>");
+                    //const card = `<div class="card">
+                    //                                <h5 class="card-header">${e.articleTitle}</h5>
+                    //                                <div class="card-body">
+                    //                                    <h5 class="card-title">${e.articleTitle}</h5>
+                    //                                    <p class="card-text">${e.description}</a>
+                    //                                </div>
+                    //                        </div>`
+                    const card = `<div class="card">
+                                           <a href="Uploads/${e.fileName}"> <img class="card-img-top w-25 p-3" src = "img/PDF_file_icon.svg" alt = "Card image cap" > </a>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${e.articleTitle}</h5>
+                                                    <p class="card-text">${e.description}</p>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <small class="text-muted">${e.countReader} Views</small>
+                                                </div>
+                            </div >`
+
+                    const card2 = `   <div class="card">
+                <div class="row no-gutters">
+                    <div class="col-sm-2">
+                        <img src="img/PDF_file_icon.svg" class="w-100 p-3" alt="">
+                    </div>
+                    <div class="col">
+                        <div class="card-block px-2">
+                            <h4 class="card-title">${e.articleTitle}</h4>
+                            <p class="card-text">${e.description}</p>
+                            <button onclick="UpdateView('${e.id}','${e.fileName}')" class="btn btn-primary">View</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer w-100 text-muted text-right">
+                    <small class="text-muted">${e.countReader} Views</small>
+
+                </div>
+            </div><br>`
+
+                    //const ele = document.createElement('div');
+                    //ele.innerHTML = card;
+                    //document.body.appendChild(ele.firstChild);
+                    $(".content").append(card2);
+
+                });
+            };
+            options.error = function () {
+                $("#msg").html("Error while calling the Web API!");
+            };
+            $.ajax(options);
+        });
+
+    </script>
+
+}
